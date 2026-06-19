@@ -21,7 +21,7 @@ API_URL = "https://www.ebi.ac.uk/ProtVar/api/download"
 def ensure_parent_dir(path: Path) -> None:
     parent = path.parent
     if parent and not parent.exists():
-        print(f"Creating directory {parent}")
+        print(f"Creating directory: {parent}")
         parent.mkdir(parents=True, exist_ok=True)
 
 
@@ -74,7 +74,7 @@ def main() -> int:
     output_path = output_dir / remote_name
     ensure_parent_dir(output_path)
     output_path.write_bytes(response.content)
-    print(f"Saved to {output_path}")
+    print(f"Saved to: {output_path}")
     return 0
 
 

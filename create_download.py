@@ -23,7 +23,7 @@ API_URL = "https://www.ebi.ac.uk/ProtVar/api/download"
 def ensure_parent_dir(path: Path) -> None:
     parent = path.parent
     if parent and not parent.exists():
-        print(f"Creating directory {parent}")
+        print(f"Creating directory: {parent}")
         parent.mkdir(parents=True, exist_ok=True)
 
 
