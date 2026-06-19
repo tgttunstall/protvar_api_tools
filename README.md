@@ -34,7 +34,7 @@ Sample input is in `data/test.txt`.
 2. Pass that same `resultId` to `create_download.py`.
 3. `create_download.py` returns a separate download job ID.
 4. Pass that download job ID to `poll.py`.
-5. When ready, use `retrieve.py` to fetch the file.
+5. When ready, use `retrieve.py` with the remote download ID/filename returned by ProtVar.
 
 ## `submit.py`
 
@@ -72,6 +72,7 @@ python create_download.py --result-id results/jobid.txt --assembly GRCh37 --anno
 ```
 
 This writes the download job ID to `results/download_jobid.txt`.
+That file is local state only, not the remote download filename.
 
 ## `poll.py`
 
@@ -87,6 +88,8 @@ Example:
 python poll.py --job-id results/download_jobid.txt
 ```
 
+`poll.py` accepts either the job ID itself or a file containing it.
+
 Status meanings:
 - `queued`
 - `processing`
@@ -99,15 +102,17 @@ Status meanings:
 Download a ready result file.
 
 Options:
-- `--filename` required, the download filename/id or a file containing it.
+- `--download-id` required, the ProtVar download ID/filename or a file containing it.
 - `--output` optional, local output file path.
 - `--timeout` optional, request timeout in seconds.
 
 Example:
 
 ```bash
-python retrieve.py --filename <download-filename> --output results/results.json
+python retrieve.py --download-id <download-id> --output results/results.json
 ```
+
+`<download-id>` is the remote filename/id returned by ProtVar, not `results/download_jobid.txt`.
 
 ## Example workflow
 
@@ -115,7 +120,7 @@ python retrieve.py --filename <download-filename> --output results/results.json
 python submit.py --input data/test.txt --assembly GRCh37 --jobid-file results/jobid.txt
 python create_download.py --result-id results/jobid.txt --assembly GRCh37 --annotations full --jobid-file results/download_jobid.txt
 python poll.py --job-id results/download_jobid.txt
-python retrieve.py --filename <download-filename> --output results/results.json
+python retrieve.py --download-id <download-id> --output results/results.json
 ```
 
 ## Notes

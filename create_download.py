@@ -20,6 +20,13 @@ import requests
 API_URL = "https://www.ebi.ac.uk/ProtVar/api/download"
 
 
+def ensure_parent_dir(path: Path) -> None:
+    parent = path.parent
+    if parent and not parent.exists():
+        print(f"Creating directory {parent}")
+        parent.mkdir(parents=True, exist_ok=True)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Create a ProtVar download job from an upload result ID and save the returned download job ID."
@@ -120,7 +127,9 @@ def main() -> int:
         raise SystemExit(f"ProtVar returned non-JSON response: {response.text}") from exc
 
     download_id = extract_download_id(body)
-    Path(args.jobid_file).write_text(f"{download_id}\n", encoding="utf-8")
+    jobid_path = Path(args.jobid_file)
+    ensure_parent_dir(jobid_path)
+    jobid_path.write_text(f"{download_id}\n", encoding="utf-8")
     print(download_id)
     return 0
 

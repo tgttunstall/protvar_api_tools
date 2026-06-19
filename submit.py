@@ -20,6 +20,13 @@ import requests
 API_URL = "https://www.ebi.ac.uk/ProtVar/api/input/file"
 
 
+def ensure_parent_dir(path: Path) -> None:
+    parent = path.parent
+    if parent and not parent.exists():
+        print(f"Creating directory {parent}")
+        parent.mkdir(parents=True, exist_ok=True)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -91,7 +98,9 @@ def main() -> int:
         raise SystemExit(f"ProtVar returned non-JSON response: {response.text}") from exc
 
     job_id = extract_job_id(payload)
-    Path(args.jobid_file).write_text(f"{job_id}\n", encoding="utf-8")
+    jobid_path = Path(args.jobid_file)
+    ensure_parent_dir(jobid_path)
+    jobid_path.write_text(f"{job_id}\n", encoding="utf-8")
     print(job_id)
     return 0
 
