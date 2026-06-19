@@ -126,7 +126,7 @@ python poll.py --job-id results/download_jobid.txt
 python retrieve.py --download-id results/download_jobid.txt --outdir results/
 ```
 
-* See note above.
+* #* See Note above.
 
 ## Notes
 
