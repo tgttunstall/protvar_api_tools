@@ -74,7 +74,7 @@ python create_download.py --result-id results/jobid.txt --assembly AUTO --annota
 This writes the download job ID to `results/download_jobid.txt`.
 That file is local state only, not the remote download filename.
 
-*Note: `--assembly AUTO` works correctly with `data/test.txt`, but not reliably with `csvs_all_variants_grch37_NOINDELS_100000`; for that larger GRCh37 list, the ProtVar download step currently needs a workaround.
+**Note: `--assembly AUTO` works correctly with `data/test.txt`, but not reliably with `csvs_all_variants_grch37_NOINDELS_100000`; for that larger GRCh37 list, the ProtVar download step currently needs a workaround.**
 
 ## `poll.py`
 
@@ -121,10 +121,12 @@ The downloaded file is saved as `results/<ProtVar filename>`.
 
 ```bash
 python submit.py --input data/test.txt --assembly GRCh37 --jobid-file results/jobid.txt
-python create_download.py --result-id results/jobid.txt --assembly AUTO --annotations full --jobid-file results/download_jobid.txt
+python create_download.py --result-id results/jobid.txt --assembly AUTO --annotations full --jobid-file results/download_jobid.txt  #*
 python poll.py --job-id results/download_jobid.txt
 python retrieve.py --download-id results/download_jobid.txt --outdir results/
 ```
+
+* See note above.
 
 ## Notes
 
