@@ -110,7 +110,7 @@ def main() -> int:
         "structure": annotations["structure"],
         "function": annotations["function"],
         "population": annotations["population"],
-        "full": True,
+        "full": args.annotations == "full",
     }
 
     response = requests.post(
