@@ -121,12 +121,12 @@ The downloaded file is saved as `results/<ProtVar filename>`.
 
 ```bash
 python submit.py --input data/test.txt --assembly GRCh37 --jobid-file results/jobid.txt
-python create_download.py --result-id results/jobid.txt --assembly AUTO --annotations full --jobid-file results/download_jobid.txt  #*
+python create_download.py --result-id results/jobid.txt --assembly AUTO --annotations full --jobid-file results/download_jobid.txt
 python poll.py --job-id results/download_jobid.txt
 python retrieve.py --download-id results/download_jobid.txt --outdir results/
 ```
 
-* #* See Note above.
+* `create_download.py ... --assembly AUTO` See Note above.
 
 ## Notes
 
