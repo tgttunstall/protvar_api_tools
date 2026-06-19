@@ -2,6 +2,14 @@
 
 Small CLI tools for working with the ProtVar API.
 
+## Setup
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Overview
 
 - `submit.py` uploads a variant file and writes the ProtVar upload `resultId`.
