@@ -15,7 +15,7 @@ pip install -r requirements.txt
 - `submit.py` uploads a variant file and writes the ProtVar upload `resultId`.
 - `create_download.py` creates a download job from that `resultId`.
 - `poll.py` checks the download job status.
-- `retrieve.py` downloads the finished result file.
+- `retrieve.py` downloads the finished result file and keeps the ProtVar filename.
 
 ## Input data
 
@@ -25,7 +25,7 @@ Sample input is in `data/test.txt`.
 
 - `submit.py` writes the upload `resultId` to `--jobid-file`.
 - `create_download.py` writes the download job ID to `--jobid-file`.
-- `retrieve.py` writes the downloaded file to `--output`.
+- `retrieve.py` writes the downloaded file to `--outdir` while preserving the ProtVar filename.
 - Parent directories for output paths are created automatically.
 
 ## ID flow
@@ -103,16 +103,17 @@ Download a ready result file.
 
 Options:
 - `--download-id` required, the ProtVar download ID/filename or a file containing it.
-- `--output` optional, local output file path.
+- `--outdir` optional, local output directory. The ProtVar filename is preserved.
 - `--timeout` optional, request timeout in seconds.
 
 Example:
 
 ```bash
-python retrieve.py --download-id <download-id> --output results/results.json
+python retrieve.py --download-id <download-id> --outdir results/
 ```
 
-`<download-id>` is the remote filename/id returned by ProtVar, not `results/download_jobid.txt`.
+`<download-id>` can be the ProtVar value directly or a file that contains that same value, such as `results/download_jobid.txt`.
+The downloaded file is saved as `results/<ProtVar filename>`.
 
 ## Example workflow
 
@@ -120,11 +121,11 @@ python retrieve.py --download-id <download-id> --output results/results.json
 python submit.py --input data/test.txt --assembly GRCh37 --jobid-file results/jobid.txt
 python create_download.py --result-id results/jobid.txt --assembly GRCh37 --annotations full --jobid-file results/download_jobid.txt
 python poll.py --job-id results/download_jobid.txt
-python retrieve.py --download-id <download-id> --output results/results.json
+python retrieve.py --download-id <download-id> --outdir results/
 ```
 
 ## Notes
 
 - `results/` is a suggested output folder in the examples.
-- The scripts can write wherever you point `--jobid-file` and `--output`.
+- The scripts can write wherever you point `--jobid-file` and `--outdir`.
 - `submit.py` and `create_download.py` write IDs to text files so later scripts can reuse them.

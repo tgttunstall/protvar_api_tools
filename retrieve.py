@@ -4,7 +4,7 @@
 
 Examples:
   python retrieve.py --download-id 38e6aedd-bb36-4a5d-a944-ae827ccb4f3b.csv.zip
-  python retrieve.py --download-id download_id.txt --output results.json
+  python retrieve.py --download-id download_id.txt --outdir results/
 """
 
 from __future__ import annotations
@@ -35,8 +35,8 @@ def parse_args() -> argparse.Namespace:
         help="ProtVar download ID/filename, or a path to a text file containing it.",
     )
     parser.add_argument(
-        "--output",
-        help="Local output filename. Defaults to the remote filename or response name.",
+        "--outdir",
+        help="Local output directory. The ProtVar filename is preserved.",
     )
     parser.add_argument(
         "--timeout",
@@ -65,17 +65,16 @@ def main() -> int:
     response = requests.get(f"{API_URL}/{download_id}", timeout=args.timeout)
     response.raise_for_status()
 
-    output = args.output
-    if not output:
-        output = download_id
-        cd = response.headers.get("content-disposition", "")
-        if "filename=" in cd:
-            output = cd.split("filename=", 1)[1].strip('"\' ')
+    remote_name = download_id
+    cd = response.headers.get("content-disposition", "")
+    if "filename=" in cd:
+        remote_name = cd.split("filename=", 1)[1].strip('"\' ')
 
-    output_path = Path(output)
+    output_dir = Path(args.outdir) if args.outdir else Path(".")
+    output_path = output_dir / remote_name
     ensure_parent_dir(output_path)
     output_path.write_bytes(response.content)
-    print(output)
+    print(f"Saved to {output_path}")
     return 0
 
 
