@@ -109,10 +109,10 @@ Options:
 Example:
 
 ```bash
-python retrieve.py --download-id <download-id> --outdir results/
+python retrieve.py --download-id results/download_jobid.txt --outdir results/
 ```
 
-`<download-id>` can be the ProtVar value directly or a file that contains that same value, such as `results/download_jobid.txt`.
+`results/download_jobid.txt` contains the same download job ID you check with `poll.py`.
 The downloaded file is saved as `results/<ProtVar filename>`.
 
 ## Example workflow
@@ -121,7 +121,7 @@ The downloaded file is saved as `results/<ProtVar filename>`.
 python submit.py --input data/test.txt --assembly GRCh37 --jobid-file results/jobid.txt
 python create_download.py --result-id results/jobid.txt --assembly GRCh37 --annotations full --jobid-file results/download_jobid.txt
 python poll.py --job-id results/download_jobid.txt
-python retrieve.py --download-id <download-id> --outdir results/
+python retrieve.py --download-id results/download_jobid.txt --outdir results/
 ```
 
 ## Notes
