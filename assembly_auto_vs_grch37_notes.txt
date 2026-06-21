@@ -1,0 +1,160 @@
+#=====================
+# 100,000 variants
+submit with --assembly GRCh37
+download with --assembly GRCh37
+#=====================
+python submit.py --input data/csvs_all_variants_grch37_NOINDELS_100000.txt --assembly GRCh37 --jobid-file results/jobid_1K_37.txt
+python create_download.py --result-id results/jobid_1K_37.txt --assembly GRCh37 --annotations full --jobid-file results/download_jobid_1K_37_37.txt
+python poll.py --job-id results/download_jobid_1K_37_37.txt
+python retrieve.py --download-id results/download_jobid_1K_37_37.txt --outdir results/
+Saved to: results/8fe51f19-6cae-4052-8d1f-a9586a974dd0.csv.zip
+
+cd results
+unzip 8fe51f19-6cae-4052-8d1f-a9586a974dd0.csv.zip
+wc -l 8fe51f19-6cae-4052-8d1f-a9586a974dd0.csv
+3693 8fe51f19-6cae-4052-8d1f-a9586a974dd0.csv
+cd ..
+
+!!!! 
+NOTE: incorrect number of rows in the result file, expected > 100000, only got 3693
+also an expected variant "10:100042437:A:C" was not there, even if it could not be mapped.
+!!!!
+
+#=====================
+# 100,000 variants
+submit with --assembly AUTO
+download with --assembly AUTO
+#=====================
+python submit.py --input data/csvs_all_variants_grch37_NOINDELS_100000.txt --assembly AUTO --jobid-file results/jobid_1K_auto.txt
+python create_download.py --result-id results/jobid_1K_auto.txt --assembly AUTO --annotations full --jobid-file results/download_jobid_1K_auto.txt
+python poll.py --job-id results/download_jobid_1K_auto.txt 
+python retrieve.py --download-id results/download_jobid_1K_auto.txt --outdir results/
+Saved to: results/50c8790a-beff-45d1-8d69-e5293229fa28.csv.zip
+
+cd results
+unzip 50c8790a-beff-45d1-8d69-e5293229fa28.csv.zip 
+wc -l 50c8790a-beff-45d1-8d69-e5293229fa28.csv
+100661 50c8790a-beff-45d1-8d69-e5293229fa28.csv
+grep "10:100042437:A:C" 50c8790a-beff-45d1-8d69-e5293229fa28.csv
+# returns 3 rows
+cd ..
+
+NOTE: seems correct number of rows in result file.
+also an expected variant "10:100042437:A:C" returned 3 rows!?
+
+#=====================
+# 100,000 variants
+submit with --assembly GRCh37
+download with --assembly AUTO
+#=====================
+reuse jobid_1K_37.txt
+python create_download.py --result-id results/jobid_1K_37.txt --assembly AUTO --annotations full --jobid-file results/download_jobid_1K_37_auto.txt
+python poll.py --job-id results/download_jobid_1K_37_auto.txt 
+python retrieve.py --download-id results/download_jobid_1K_37_auto.txt --outdir results/
+Saved to: results/7a4649bd-f070-4de2-bc6a-408574ce08c9.csv.zip
+
+cd results
+unzip 7a4649bd-f070-4de2-bc6a-408574ce08c9.csv.zip 
+
+wc -l 7a4649bd-f070-4de2-bc6a-408574ce08c9.csv
+100661 7a4649bd-f070-4de2-bc6a-408574ce08c9.csv
+
+# compare (auto submit + auto download VS 37 submit + auto download)
+sha1sum 
+ wc -l 50c8790a-beff-45d1-8d69-e5293229fa28.csv 7a4649bd-f070-4de2-bc6a-408574ce08c9.csv
+  100661 50c8790a-beff-45d1-8d69-e5293229fa28.csv
+  100661 7a4649bd-f070-4de2-bc6a-408574ce08c9.csv
+  201322 total
+
+BUT
+sha1sum 50c8790a-beff-45d1-8d69-e5293229fa28.csv 7a4649bd-f070-4de2-bc6a-408574ce08c9.csv
+11bfffdf55742df77b32f4219ec0f564595e33af  50c8790a-beff-45d1-8d69-e5293229fa28.csv
+e570c0b523ef53804dc2604a456f0b47c8d23758  7a4649bd-f070-4de2-bc6a-408574ce08c9.csv
+
+!!!
+NOTE: different files? I did a diff:
+
+diff 50c8790a-beff-45d1-8d69-e5293229fa28.csv 7a4649bd-f070-4de2-bc6a-408574ce08c9.csv
+diff 50c8790a-beff-45d1-8d69-e5293229fa28.csv 7a4649bd-f070-4de2-bc6a-408574ce08c9.csv > diff_1K.txt
+
+3457c3457
+< "10:100260288:A:G","10","100260288","","A","G","N/A","CWF19L1","aaU/aaC","-","7.417","[ENSP00000326411.6(ENST00000354105.10)]","N/A","Q69YN2","A0A0S2Z5E9;73;Asn/Asn;synonymous;[ENSP00000326411.6(ENST00000354105.10)]|A0A0S2Z5Q6;68;Ile/Thr;missense;[ENSP00000492991.1(ENST00000468709.5)]|Q69YN2-1;73;Asn/Asn;synonymous;[ENSP00000326411.6(ENST00000354105.10)]","CWF19-like protein 1","73","Asn/Asn","synonymous","N/A","CHAIN-CWF19-like protein 1;Range:1-538","Evidence at protein level","538","2025-04-09","2008-01-15","N/A","N/A","N/A","null","Q2TBE0(CWF19L2)","pocket_id:18;rad_gyration:3.548085;energy_per_vol:0.576491;buriedness:0.92069;resid:71-73 78 81-86 95 97-98 114-116 124-128;mean_plddt:88.58809523809525;score:694.9013614758089","N/A","N/A","0.571","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","[Asn>Asp;NC_000010.11:g.100260290T>C;10q24.31;gnomAD-rs1359873169][Asn>Ser;NC_000010.11:g.100260289T>C;10q24.31;ESP-rs141823218|ExAC-rs141823218|TOPMed-rs141823218|gnomAD-rs141823218]","8ro2;I73;3.5;Electron Microscopy"
+---
+> "10:100260288:A:G","10","100260288","","A","G","N/A","CWF19L1","aaU/aaC","-","7.417","[ENSP00000326411.6(ENST00000354105.10)]","N/A","Q69YN2","A0A0S2Z5E9;73;Asn/Asn;synonymous;[ENSP00000326411.6(ENST00000354105.10)]|Q69YN2-1;73;Asn/Asn;synonymous;[ENSP00000326411.6(ENST00000354105.10)]|A0A0S2Z5Q6;68;Ile/Thr;missense;[ENSP00000492991.1(ENST00000468709.5)]","CWF19-like protein 1","73","Asn/Asn","synonymous","N/A","CHAIN-CWF19-like protein 1;Range:1-538","Evidence at protein level","538","2025-04-09","2008-01-15","N/A","N/A","N/A","null","Q2TBE0(CWF19L2)","pocket_id:18;rad_gyration:3.548085;energy_per_vol:0.576491;buriedness:0.92069;resid:71-73 78 81-86 95 97-98 114-116 124-128;mean_plddt:88.58809523809525;score:694.9013614758089","N/A","N/A","0.571","N/A","N/A","N/A","N/A","N/A","N/A","N/A","N/A","[Asn>Asp;NC_000010.11:g.100260290T>C;10q24.31;gnomAD-rs1359873169][Asn>Ser;NC_000010.11:g.100260289T>C;10q24.31;ESP-rs141823218|ExAC-rs141823218|TOPMed-rs141823218|gnomAD-rs141823218]","8ro2;I73;3.5;Electron Microscopy"
+
+!!!
+cd ..
+
+####################################################################################
+#=====================
+# 6 variants
+submit with --assembly GRCh37
+download with --assembly GRCh37
+results
+#=====================
+python submit.py --input data/test.txt --assembly GRCh37 --jobid-file results/jobid_6_37.txt
+python create_download.py --result-id results/jobid_6_37.txt --assembly GRCh37 --annotations full --jobid-file results/download_jobid_6_37_37.txt
+python poll.py --job-id results/download_jobid_6_37_37.txt
+python retrieve.py --download-id results/download_jobid_6_37_37.txt --outdir results/
+Saved to: results/9828661f-0202-4d61-8b0f-d8bf7572b669.csv.zip
+
+cd results
+unzip 9828661f-0202-4d61-8b0f-d8bf7572b669.csv.zip 
+wc -l 9828661f-0202-4d61-8b0f-d8bf7572b669.csv
+1 9828661f-0202-4d61-8b0f-d8bf7572b669.csv
+cd ..
+
+!!!! 
+NOTE: incorrect number of rows in the result file, expected 6, only got 1 i.e. header
+3 variants should return results, 2 have no mappings
+!!!!
+
+#=====================
+# 6 variants
+submit with --assembly AUTO
+download with --assembly AUTO
+#=====================
+python submit.py --input data/test.txt --assembly AUTO --jobid-file results/jobid_6_auto.txt
+python create_download.py --result-id results/jobid_6_auto.txt --assembly AUTO --annotations full --jobid-file results/download_jobid_6_auto_auto.txt
+python poll.py --job-id results/download_jobid_6_auto_auto.txt 
+python retrieve.py --download-id results/download_jobid_6_auto_auto.txt --outdir results/
+Saved to: results/62b48a9a-ef41-4430-bdba-3f874eadb8c9.csv.zip
+
+cd results
+unzip 62b48a9a-ef41-4430-bdba-3f874eadb8c9.csv.zip 
+wc -l 62b48a9a-ef41-4430-bdba-3f874eadb8c9.csv
+6 62b48a9a-ef41-4430-bdba-3f874eadb8c9.csv
+
+!!!
+NOTE: expected 5 rows + header, got exactly that with 3 variants with results, and 2 without
+!!!
+#=====================
+# 6 variants
+submit with --assembly GRCh37
+download with --assembly AUTO
+#=====================
+reuse jobid_6_37.txt
+python create_download.py --result-id results/jobid_6_37.txt --assembly AUTO --annotations full --jobid-file results/download_jobid_6_37_auto.txt
+python poll.py --job-id results/download_jobid_6_37_auto.txt 
+python retrieve.py --download-id results/download_jobid_6_37_auto.txt --outdir results/
+Saved to: results/496816ad-d628-47e1-9e7e-e8c733932ae7.csv.zip
+
+cd results
+unzip 496816ad-d628-47e1-9e7e-e8c733932ae7.csv.zip 
+
+# compare (auto submit + auto download VS 37 submit + auto download)
+sha1sum 62b48a9a-ef41-4430-bdba-3f874eadb8c9.csv 496816ad-d628-47e1-9e7e-e8c733932ae7.csv
+f9cc6f422687d73564b9f4c1e547a4486df9de83  62b48a9a-ef41-4430-bdba-3f874eadb8c9.csv
+f9cc6f422687d73564b9f4c1e547a4486df9de83  496816ad-d628-47e1-9e7e-e8c733932ae7.csv
+
+'''
+NOTE: its the same file!
+'''
+
+#=============
+Conclusion
+#=============
+submitting 6 variants with auto submit + auto download == 37 submit + auto download
+BUT 
+submitting 1K variants with auto submit + auto download != 37 submit + auto download
+See results/diff_1K.txt
