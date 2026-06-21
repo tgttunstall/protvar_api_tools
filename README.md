@@ -158,7 +158,7 @@ python retrieve.py --download-id results/download_jobid.txt --outdir results/
 - The scripts can write wherever you point `--jobid-file` and `--outdir`.
 - `submit.py` and `create_download.py` write IDs to text files so later scripts can reuse them.
 - Assembly comparison details are recorded in `assembly_auto_vs_grch37_notes.txt`.
-- For the 6-variant test input, `AUTO` submit plus `AUTO` download matched `GRCh37` submit plus `AUTO` download.
-- For the larger GRCh37 input, `AUTO` submit plus `AUTO` download did not produce text-identical output compared with `GRCh37` submit plus `AUTO` download. The observed difference was ordering within `Alternative_isoform_mappings`.
-- This behavior has been flagged to the ProtVar team for clarification.
-- Until clarified, use `--assembly AUTO` for the download step for these GRCh37 inputs.
+  - For the 6-variant test input, `AUTO` submit plus `AUTO` download matched `GRCh37` submit plus `AUTO` download.
+  - For the larger GRCh37 input, `AUTO` submit plus `AUTO` download did not produce text-identical output compared with `GRCh37` submit plus `AUTO` download. The observed difference was ordering within `Alternative_isoform_mappings`.
+  - This behavior has been flagged to the ProtVar team for clarification.
+  - Until clarified, use `--assembly AUTO` for the download step for these GRCh37 inputs.
