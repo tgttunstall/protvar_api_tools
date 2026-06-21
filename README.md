@@ -15,7 +15,7 @@ pip install -r requirements.txt
 - `submit.py` uploads a variant file and writes the ProtVar upload `resultId`.
 - `create_download.py` creates a download job from that `resultId`.
 - `poll.py` checks the download job status.
-- `retrieve.py` downloads the finished result file and keeps the ProtVar filename.
+- `retrieve.py` downloads one or more finished result files and keeps the ProtVar filenames.
 
 ## Input data
 
@@ -25,7 +25,7 @@ Sample input is in `data/test.txt`.
 
 - `submit.py` writes the upload `resultId` to `--jobid-file`.
 - `create_download.py` writes the download job ID to `--jobid-file`.
-- `retrieve.py` writes the downloaded file to `--outdir` while preserving the ProtVar filename.
+- `retrieve.py` writes downloaded files to `--outdir` while preserving the ProtVar filenames.
 - Parent directories for output paths are created automatically.
 
 ## ID flow
@@ -101,21 +101,45 @@ Status meanings:
 
 ## `retrieve.py`
 
-Download a ready result file.
+Download one or more ready result files.
+
+Downloads are streamed to disk in chunks rather than loaded fully into memory.
+This is safer for large ProtVar zip files, such as full-annotation downloads or
+downloads created from large variant lists.
 
 Options:
-- `--download-id` required, the ProtVar download ID/filename or a file containing it.
+- `--download-id` required, one or more download IDs, or one file containing one or more download IDs, one per line.
 - `--outdir` optional, local output directory. The ProtVar filename is preserved.
 - `--timeout` optional, request timeout in seconds.
 
-Example:
+Single-ID example:
 
 ```bash
 python retrieve.py --download-id results/download_jobid.txt --outdir results/
 ```
 
+Multiple IDs on the command line:
+
+```bash
+python retrieve.py --download-id id1 id2 id3 --outdir results/
+```
+
+Multiple IDs from a file:
+
+```text
+id1
+id2
+id3
+```
+
+```bash
+python retrieve.py --download-id results/download_jobids.txt --outdir results/
+```
+
+Use either literal IDs on the command line or one ID file. Do not mix literal IDs and an ID file in the same command.
+
 `results/download_jobid.txt` contains the same download job ID you check with `poll.py`.
-The downloaded file is saved as `results/<ProtVar filename>`.
+Downloaded files are saved as `results/<ProtVar filename>`.
 
 ## Example workflow
 
