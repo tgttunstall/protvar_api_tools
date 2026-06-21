@@ -74,7 +74,7 @@ python create_download.py --result-id results/jobid.txt --assembly AUTO --annota
 This writes the download job ID to `results/download_jobid.txt`.
 That file is local state only, not the remote download filename.
 
-**Note: `--assembly AUTO` works correctly with `data/test.txt`, but not reliably with `csvs_all_variants_grch37_NOINDELS_100000`; for that larger GRCh37 list, the ProtVar download step currently needs a workaround.**
+**Note: In local assembly testing, explicit `--assembly GRCh37` during the download step returned unexpectedly few rows for both the small and large GRCh37 inputs. Using `--assembly AUTO` during the download step produced the expected row counts. For the larger input, `AUTO` submit plus `AUTO` download was not text-identical to `GRCh37` submit plus `AUTO` download because one `Alternative_isoform_mappings` field had the same mappings in a different order. See `assembly_auto_vs_grch37_notes.txt`.**
 
 ## `poll.py`
 
@@ -157,3 +157,8 @@ python retrieve.py --download-id results/download_jobid.txt --outdir results/
 - `results/` is a suggested output folder in the examples.
 - The scripts can write wherever you point `--jobid-file` and `--outdir`.
 - `submit.py` and `create_download.py` write IDs to text files so later scripts can reuse them.
+- Assembly comparison details are recorded in `assembly_auto_vs_grch37_notes.txt`.
+- For the 6-variant test input, `AUTO` submit plus `AUTO` download matched `GRCh37` submit plus `AUTO` download.
+- For the larger GRCh37 input, `AUTO` submit plus `AUTO` download did not produce text-identical output compared with `GRCh37` submit plus `AUTO` download. The observed difference was ordering within `Alternative_isoform_mappings`.
+- This behavior has been flagged to the ProtVar team for clarification.
+- Until clarified, use `--assembly AUTO` for the download step for these GRCh37 inputs.
